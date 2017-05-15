@@ -38,6 +38,7 @@ public interface Collisions
         //what x value gives equal y values
         //CAN RETURN NULL
         //same xVal divides by 0
+        
         //test cases
         // colinear
         // perpendicular cardinal
