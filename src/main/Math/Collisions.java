@@ -38,6 +38,12 @@ public interface Collisions
         //what x value gives equal y values
         //CAN RETURN NULL
         //same xVal divides by 0
+        //test cases
+        // colinear
+        // perpendicular cardinal
+        // extension of line collides vertical
+        // extension of line collides horizontal
+        // parallel
         double slA = (a.y2 - a.y1) / (a.x2 - a.x1);
         double slB = (b.y2 - b.y1) / (b.x2 - b.x1);
         double xA1, xB1, xA2, xB2, yA, yB;
