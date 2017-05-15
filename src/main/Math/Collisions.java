@@ -37,6 +37,7 @@ public interface Collisions
     {
         //what x value gives equal y values
         //CAN RETURN NULL
+        //same xVal divides by 0
         double slA = (a.y2 - a.y1) / (a.x2 - a.x1);
         double slB = (b.y2 - b.y1) / (b.x2 - b.x1);
         double xA1, xB1, xA2, xB2, yA, yB;
@@ -67,7 +68,15 @@ public interface Collisions
         double baseA = yA - slA * xA1;
         double baseB = yB - slB * xB1;
         double intersect = (baseA - baseB) / (slB - slA);
-        if((xA2 > xB1 && xA1 < xB2) &&  intersect > Math.max(xA1, xB1) && intersect < Math.min(xA2, xB2))
+        if(a.x1 == a.x2)
+        {
+            intersect = a.x1;
+        }
+        if(b.x1 == b.x2)
+        {
+            intersect = b.x1;
+        }
+        if(intersect >= Math.max(xA1, xB1) && intersect <= Math.min(xA2, xB2))
         {
             DoublePoint p = new DoublePoint();
             p.x = intersect;
