@@ -83,7 +83,7 @@ public class CustomPanel extends JPanel implements KeyListener, MouseMotionListe
         {
             p.right();
         }
-        else if(p.onGround)
+        else if(p.onSurface)
         {
             p.frictionHorizontal();
         }
@@ -94,6 +94,8 @@ public class CustomPanel extends JPanel implements KeyListener, MouseMotionListe
             {
                 p.setX(collision.x);
                 p.setY(collision.y);
+                p.setOnBox(box, collision.surfaceType);
+                p.setY(p.getY() + box.yVel);
             }
             //check for collisions between boxes and stop the higher box
             box.run();

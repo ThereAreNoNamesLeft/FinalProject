@@ -3,9 +3,8 @@
 package main.Math;
 
 import java.awt.Point;
-import main.Math.DoublePoint;
 
-public interface Collisions 
+public class Collisions 
 {
     //THESE ONLY WORK WITH SOUTHEAST RECTANGLES
     //point
@@ -38,56 +37,22 @@ public interface Collisions
         //what x value gives equal y values
         //CAN RETURN NULL
         //same xVal divides by 0
-        
         //test cases
         // colinear
         // perpendicular cardinal
         // extension of line collides vertical
         // extension of line collides horizontal
         // parallel
-        double slA = (a.y2 - a.y1) / (a.x2 - a.x1);
-        double slB = (b.y2 - b.y1) / (b.x2 - b.x1);
-        double xA1, xB1, xA2, xB2, yA, yB;
-        if(a.x1 <= a.x2)
-        {
-            xA1 = a.x1;
-            xA2 = a.x2;
-            yA = a.y1;
-        }
-        else
-        {
-            xA1 = a.x2;
-            xA2 = a.x1;
-            yA = a.y2;
-        }
-        if(b.x1 <= b.x2)
-        {
-            xB1 = b.x1;
-            xB2 = b.x2;
-            yB = b.y1;
-        }
-        else
-        {
-            xB1 = b.x2;
-            xB2 = b.x1;
-            yB = b.y2;
-        }
-        double baseA = yA - slA * xA1;
-        double baseB = yB - slB * xB1;
-        double intersect = (baseA - baseB) / (slB - slA);
-        if(a.x1 == a.x2)
-        {
-            intersect = a.x1;
-        }
-        if(b.x1 == b.x2)
-        {
-            intersect = b.x1;
-        }
-        if(intersect >= Math.max(xA1, xB1) && intersect <= Math.min(xA2, xB2))
+        //test if point is on both line a and line b
+        double nnum = ((b.x2 - b.x1) * (a.y1 - b.y1) - (b.y2 - b.y1) * (a.x1 - b.x1));
+        double ndenom = ((b.y2 - b.y1) * (a.x2 - a.x1) - (b.x2 - b.x1) * (a.y2 - a.y1));
+        double n = nnum / ndenom;
+        double m = (a.x1 - b.x1 + n * (a.x2 - a.x1)) / (b.x2 - b.x1);
+        if(n <= 1 && n >= 0 && m <= 1 && m >= 0)
         {
             DoublePoint p = new DoublePoint();
-            p.x = intersect;
-            p.y = intersect * slA + baseA;
+            p.x = a.x1 + n * (a.x2 - a.x1);
+            p.y = a.y1 + n * (a.y2 - a.y1);
             return p;
         }
         return null;
@@ -99,20 +64,46 @@ public interface Collisions
         DoublePoint p;
         DoublePoint c1 = CollidesLineLine(a, new Line(bx1, by1, bx2, by1));
         DoublePoint c2 = CollidesLineLine(a, new Line(bx1, by2, bx2, by2));
-        DoublePoint c3 = CollidesLineLine(a, new Line(bx1, by1, bx1, by2));
-        DoublePoint c4 = CollidesLineLine(a, new Line(bx2, by1, bx2, by2));
+        
+        //excnahnged x and y values so that slope is 0 instead of undef
+        Line aflip = new Line(a.y1, a.x1, a.y2, a.x2);
+        DoublePoint holder = CollidesLineLine(aflip, new Line(by1, bx1, by2, bx1));
+        DoublePoint c3 = null;
+        if(holder != null)
+        {
+            c3 = new DoublePoint();
+            c3.x = holder.y;
+            c3.y = holder.x;
+        }
+        holder = CollidesLineLine(aflip, new Line(by1, bx2, by2, bx2));
+        DoublePoint c4 = null;
+        if(holder != null)
+        {
+            c4 = new DoublePoint();
+            c4.x = holder.y;
+            c4.y = holder.x;
+        }
+        
+        
         p = c1;
-        if(p != null && c2 != null && p.x - a.x1 > c2.x - a.x1)
+        if(p != null)
+        {
+            p.surfaceType = 't';
+        }
+        if(p == null || (c2 != null && Math.abs(a.x1 - c2.x) < Math.abs(a.x1 - p.x)))
         {
             p = c2;
+            p.surfaceType = 'b';
         }
-        if(p != null && c3 != null && p.x - a.x1 > c3.x - a.x1)
+        if(p == null || (c3 != null && Math.abs(a.x1 - c3.x) < Math.abs(a.x1 - p.x)))
         {
             p = c3;
+            p.surfaceType = 's';
         }
-        if(p != null && c4 != null && p.x - a.x1 > c4.x - a.x1)
+        if(p == null || (c4 != null && Math.abs(a.x1 - c4.x) < Math.abs(a.x1 - p.x)))
         {
             p = c4;
+            p.surfaceType = 's';
         }
         if(p != null)
         {
@@ -121,4 +112,5 @@ public interface Collisions
         //collide lines diagonals of rect, and points of line with entire
         return null;
     }
+    
 }

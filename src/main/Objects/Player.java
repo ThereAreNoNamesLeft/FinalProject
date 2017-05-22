@@ -9,13 +9,15 @@ public class Player
     double xVel = 0, yVel = 0;
     double friction = 0.9, gravity = 0.9;
     double speed = 4, jumpSpeed = 17, fallSpeed = 30;
-    public boolean onGround = false;
+    public boolean onSurface = false;
     int jumpsLeft = 1, jumpsMax = 6000000;
     public void run()
     {
         x += xVel;
         y += yVel;
-        if(!onGround)
+        
+        //temp
+        if(!onSurface)
         {
             yVel += gravity;
             if(yVel > fallSpeed)
@@ -26,13 +28,43 @@ public class Player
         if(y > 400)
         {
             y = 400;
-            yVel = 0;
-            onGround = true;
-            jumpsLeft = jumpsMax;
+            setOnGround();
         }
         
     }
-    
+    public void setOnGround()
+    {
+            yVel = 0;
+            onSurface = true;
+            jumpsLeft = jumpsMax;
+    }
+    public void setOnBox(Box b, char collType)
+    {
+        switch(collType)
+        {
+            case 't':
+            {
+                onSurface = true;
+                yVel = b.yVel;
+                jumpsLeft = jumpsMax;
+            }
+            break;
+            case 'b':
+            {
+                yVel = b.yVel;
+            }
+            break;
+            case 's':
+            {
+                xVel = -xVel / 100;
+            }
+            break;
+            default:
+            {
+                System.out.println(collType + " is not a valid collision type");
+            }
+        }
+    }
     public void frictionHorizontal()
     {
         xVel *= friction;
@@ -62,9 +94,14 @@ public class Player
     {
         return yVel;
     }
+    public void stop()
+    {
+        xVel = 0;
+        yVel = 0;
+    }
     public void left()
     {
-        if(onGround)
+        if(onSurface)
         {
             pureLeft(0.5);
         }
@@ -75,7 +112,7 @@ public class Player
     }
     public void right()
     {
-        if(onGround)
+        if(onSurface)
         {
             pureRight(0.5);
         }
@@ -86,10 +123,10 @@ public class Player
     }
     public void up()
     {
-        if(onGround)
+        if(onSurface)
         {
             yVel = -jumpSpeed;
-            onGround = false;
+            onSurface = false;
         }
         else if(jumpsLeft > 0)
         {
