@@ -13,8 +13,18 @@ public class Player
     int jumpsLeft = 1, jumpsMax = 6000000;
     public void run()
     {
+        if(y > 400)
+        {
+            y = 400;
+            setOnGround();
+        }
+        //on surface checks must be done before this point
         x += xVel;
         y += yVel;
+        if(onSurface && !(Keys.B_left || Keys.B_right))
+        {
+            frictionHorizontal();
+        }
         
         //temp
         if(!onSurface)
@@ -25,11 +35,7 @@ public class Player
                 yVel = fallSpeed;
             }
         }
-        if(y > 400)
-        {
-            y = 400;
-            setOnGround();
-        }
+        onSurface = false;
         
     }
     public void setOnGround()
@@ -45,7 +51,8 @@ public class Player
             case 't':
             {
                 onSurface = true;
-                yVel = b.yVel;
+                y = b.y - 1;
+                yVel = Math.min(b.yVel, yVel);
                 jumpsLeft = jumpsMax;
             }
             break;

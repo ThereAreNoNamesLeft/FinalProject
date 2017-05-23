@@ -61,49 +61,102 @@ public class Collisions
     {
         //return closest to a.x1
         //p is the least x difference (math.min)
-        DoublePoint p;
-        DoublePoint c1 = CollidesLineLine(a, new Line(bx1, by1, bx2, by1));
-        DoublePoint c2 = CollidesLineLine(a, new Line(bx1, by2, bx2, by2));
+        
         
         //excnahnged x and y values so that slope is 0 instead of undef
         Line aflip = new Line(a.y1, a.x1, a.y2, a.x2);
-        DoublePoint holder = CollidesLineLine(aflip, new Line(by1, bx1, by2, bx1));
-        DoublePoint c3 = null;
-        if(holder != null)
-        {
-            c3 = new DoublePoint();
-            c3.x = holder.y;
-            c3.y = holder.x;
-        }
-        holder = CollidesLineLine(aflip, new Line(by1, bx2, by2, bx2));
-        DoublePoint c4 = null;
-        if(holder != null)
-        {
-            c4 = new DoublePoint();
-            c4.x = holder.y;
-            c4.y = holder.x;
-        }
+        
+        DoublePoint c1 = null, c2 = null;
+        DoublePoint t = CollidesLineLine(a, new Line(bx1, by1, bx2, by1));
+        DoublePoint b = CollidesLineLine(a, new Line(bx1, by2, bx2, by2));
         
         
-        p = c1;
-        if(p != null)
+        DoublePoint holder;
+        if(t != null)
         {
-            p.surfaceType = 't';
+            c1 = t;
+            c1.surfaceType = 't';
         }
-        if(p == null || (c2 != null && Math.abs(a.x1 - c2.x) < Math.abs(a.x1 - p.x)))
+        if(b != null)
         {
-            p = c2;
-            p.surfaceType = 'b';
+            c2 = b;
+            c2.surfaceType = 'b';
         }
-        if(p == null || (c3 != null && Math.abs(a.x1 - c3.x) < Math.abs(a.x1 - p.x)))
+        if(c1 == null || c2 == null)
         {
-            p = c3;
-            p.surfaceType = 's';
+            holder = CollidesLineLine(aflip, new Line(by1, bx1, by2, bx1));
+            DoublePoint l = null;
+            if(holder != null)
+            {
+                l = new DoublePoint();
+                l.x = holder.y;
+                l.y = holder.x;
+            }
+            if(l != null)
+            {
+                if(c1 == null)
+                {
+                    c1 = l;
+                    c1.surfaceType = 's';
+                }
+                else
+                {
+                    c2 = l;
+                    c2.surfaceType = 's';
+                }
+            }
         }
-        if(p == null || (c4 != null && Math.abs(a.x1 - c4.x) < Math.abs(a.x1 - p.x)))
+        if(c1 == null || c2 == null)
         {
-            p = c4;
-            p.surfaceType = 's';
+            holder = CollidesLineLine(aflip, new Line(by1, bx2, by2, bx2));
+            DoublePoint r = null;
+            if(holder != null)
+            {
+                r = new DoublePoint();
+                r.x = holder.y;
+                r.y = holder.x;
+            }
+            if(r != null)
+            {
+                if(c1 == null)
+                {
+                    c1 = r;
+                    c1.surfaceType = 's';
+                }
+                else
+                {
+                    c2 = r;
+                    c2.surfaceType = 's';
+                }
+            }
+        }
+        
+        DoublePoint p;
+        if(c1 == null)
+        {
+            if(c2 == null)
+            {
+                p = null;
+            }
+            else
+            {
+                p = c2;
+            }
+        }
+        else if(c2 == null)
+        {
+            p = c1;
+        }
+        else
+        {
+            if(Math.abs(a.x1 - c1.x) < Math.abs(a.x1 - c2.x))
+            {
+                p = c1;
+            }
+            else
+            {
+                p = c2;
+            }
         }
         if(p != null)
         {

@@ -83,10 +83,6 @@ public class CustomPanel extends JPanel implements KeyListener, MouseMotionListe
         {
             p.right();
         }
-        else if(p.onSurface)
-        {
-            p.frictionHorizontal();
-        }
         for(Box box : boxes)
         {
             DoublePoint collision = Collisions.CollidesLineRect(new Line(p.getX(), p.getY(), p.getX() + p.getXVel(), p.getY() + p.getYVel()), box.x, box.y, box.x + box.width, box.y + box.height);
