@@ -4,7 +4,7 @@ package main.Math;
 
 import java.awt.Point;
 
-public class Collisions 
+public interface Collisions 
 {
     //THESE ONLY WORK WITH SOUTHEAST RECTANGLES
     //point

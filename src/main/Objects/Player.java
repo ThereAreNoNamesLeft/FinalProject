@@ -2,28 +2,28 @@
 package main.Objects;
 
 import main.Keys;
+import main.Math.DoublePoint;
 
 public class Player 
 {
-    double x = 0, y = 0;
+    double x = 400, y = -200;
     double xVel = 0, yVel = 0;
-    double friction = 0.9, gravity = 0.9;
+    double friction = 0.9, gravity = 1;
     double speed = 4, jumpSpeed = 17, fallSpeed = 30;
     public boolean onSurface = false;
-    int jumpsLeft = 1, jumpsMax = 6000000;
+    int jumpsLeft = 2, jumpsMax = 2;
     public void run()
     {
-        if(y > 400)
-        {
-            y = 400;
-            setOnGround();
-        }
         //on surface checks must be done before this point
         x += xVel;
         y += yVel;
         if(onSurface && !(Keys.B_left || Keys.B_right))
         {
             frictionHorizontal();
+            if(Math.abs(xVel) < 0.2)
+            {
+                xVel = 0;
+            }
         }
         
         //temp
@@ -38,18 +38,13 @@ public class Player
         onSurface = false;
         
     }
-    public void setOnGround()
+    public void setOnBox(Box b, DoublePoint coll)
     {
-            yVel = 0;
-            onSurface = true;
-            jumpsLeft = jumpsMax;
-    }
-    public void setOnBox(Box b, char collType)
-    {
-        switch(collType)
+        switch(coll.surfaceType)
         {
             case 't':
             {
+                setY((coll.y + getY()) / 2);
                 onSurface = true;
                 y = b.y - 1;
                 yVel = Math.min(b.yVel, yVel);
@@ -58,19 +53,22 @@ public class Player
             break;
             case 'b':
             {
+                setY((coll.y + getY()) / 2);
                 yVel = b.yVel;
             }
             break;
             case 's':
             {
-                xVel = -xVel / 100;
+                setX((coll.x + getX()) / 2);
+                xVel = 0;
             }
             break;
             default:
             {
-                System.out.println(collType + " is not a valid collision type");
+                System.out.println(coll.surfaceType + " is not a valid collision type");
             }
         }
+        setY(getY() + b.yVel);
     }
     public void frictionHorizontal()
     {
