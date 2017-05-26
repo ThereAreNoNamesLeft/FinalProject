@@ -19,8 +19,9 @@ public class ComsciFinalProject
         CustomPanel panel = new CustomPanel();
         Thread.sleep(2);
         
-        gameWindow.setSize(800, 600);
+        gameWindow.setSize(806, 600);
         gameWindow.setLocationRelativeTo(null);
+        gameWindow.setResizable(false);
         gameWindow.setVisible(true);
         Thread.sleep(2);
         

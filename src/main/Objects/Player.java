@@ -11,12 +11,25 @@ public class Player
     double friction = 0.9, gravity = 1;
     double speed = 4, jumpSpeed = 17, fallSpeed = 30;
     public boolean onSurface = false;
-    int jumpsLeft = 2, jumpsMax = 2;
+    int jumpsLeft = 2, jumpsMax = 99;
     public void run()
     {
         //on surface checks must be done before this point
         x += xVel;
+        if(x < 0)
+        {
+            x = 0;
+        }
+        else if(x > 800)
+        {
+            x = 800;
+        }
         y += yVel;
+        if(y > 0)
+        {
+            y = 0;
+            onSurface = true;
+        }
         if(onSurface && !(Keys.B_left || Keys.B_right))
         {
             frictionHorizontal();

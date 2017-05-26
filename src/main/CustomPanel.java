@@ -32,8 +32,9 @@ public class CustomPanel extends JPanel implements KeyListener, MouseMotionListe
     //boxes array goes from bottom boxes to top boxes
     public void startup()
     {
-        boxes.add(new Box(0, 0, 800, 2));
-        boxes.get(0).onGround = true; 
+        boxes.add(new Box(-1, 0, 802, 2));
+        boxes.get(0).onSurface = true; 
+        boxes.get(0).yVel = 0;
     }
     
     public void run()
@@ -87,8 +88,9 @@ public class CustomPanel extends JPanel implements KeyListener, MouseMotionListe
         {
             p.right();
         }
-        for(Box box : boxes)
+        for(int b1 = 0; b1 < boxes.size(); b1++)
         {
+            Box box = boxes.get(b1);
             DoublePoint collision = Collisions.CollidesLineRect(new Line(p.getX(), p.getY(), p.getX() + p.getXVel(), p.getY() + p.getYVel()), box.x, box.y, box.x + box.width, box.y + box.height);
             if(collision != null)
             {
@@ -96,6 +98,18 @@ public class CustomPanel extends JPanel implements KeyListener, MouseMotionListe
             }
             //check for collisions between boxes and stop the higher box
             box.run();
+            broken
+            if(!box.onSurface)
+            {
+                for(int b2 = 0; b2 < boxes.size(); b2++)
+                {
+                    Box box2 = boxes.get(b2);
+                    if(box2.onSurface && b2 != b1 && Collisions.Collides2d(box.x, box.y, box.x + box.width, box.y + box.height, box2.x, box2.y, box2.x + box2.width, box2.y + box2.height));
+                    {
+                        box.setOnSurface();
+                    }
+                }
+            }
         }
         p.run();
         //fix view to players height if they are moving faster
