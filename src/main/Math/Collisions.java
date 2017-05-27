@@ -149,7 +149,37 @@ public interface Collisions
         }
         else
         {
-            if(Math.abs(a.x1 - c1.x) < Math.abs(a.x1 - c2.x))
+            if(c1.x == c2.x)
+            {
+                if(c1.y == c2.y)
+                {
+                    if(c1.surfaceType == 't')
+                    {
+                        p = c1;
+                    }
+                    else if(c2.surfaceType == 'b')
+                    {
+                        p = c1;
+                    }
+                    else if(Math.abs(a.x1 - c1.x) < Math.abs(a.x1 - c2.x))
+                    {
+                        p = c1;
+                    }
+                    else
+                    {
+                        p = c2;
+                    }
+                }
+                else if(Math.abs(a.y1 - c1.y) < Math.abs(a.y1 - c2.y))
+                {
+                    p = c1;
+                }
+                else
+                {
+                    p = c2;
+                }
+            }
+            else if(Math.abs(a.x1 - c1.x) < Math.abs(a.x1 - c2.x))
             {
                 p = c1;
             }

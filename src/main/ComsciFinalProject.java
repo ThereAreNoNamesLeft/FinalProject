@@ -7,6 +7,7 @@ import javax.swing.JFrame;
 public class ComsciFinalProject 
 {
     public static int rate = 16;
+    public static CustomPanel panel = new CustomPanel();
     public static void main(String[] args)  throws IOException, InterruptedException
     {
         boolean killswitch = false;
@@ -16,7 +17,6 @@ public class ComsciFinalProject
         gameWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
         
-        CustomPanel panel = new CustomPanel();
         Thread.sleep(2);
         
         gameWindow.setSize(806, 600);

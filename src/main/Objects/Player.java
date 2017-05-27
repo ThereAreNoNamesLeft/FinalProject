@@ -1,7 +1,10 @@
 
 package main.Objects;
 
+import main.ComsciFinalProject;
+import main.CustomPanel;
 import main.Keys;
+import main.Math.Collisions;
 import main.Math.DoublePoint;
 
 public class Player 
@@ -11,7 +14,7 @@ public class Player
     double friction = 0.9, gravity = 1;
     double speed = 4, jumpSpeed = 17, fallSpeed = 30;
     public boolean onSurface = false;
-    int jumpsLeft = 2, jumpsMax = 99;
+    int jumpsLeft = 2, jumpsMax = 2;
     public void run()
     {
         //on surface checks must be done before this point
@@ -25,11 +28,6 @@ public class Player
             x = 800;
         }
         y += yVel;
-        if(y > 0)
-        {
-            y = 0;
-            onSurface = true;
-        }
         if(onSurface && !(Keys.B_left || Keys.B_right))
         {
             frictionHorizontal();
@@ -48,8 +46,24 @@ public class Player
                 yVel = fallSpeed;
             }
         }
+        for(Box box : CustomPanel.boxes)
+        {
+            if(Collisions.Collides2dPoint(x, y, box.x, box.y, box.x + box.width, box.y + box.height))
+            {
+                CustomPanel.gameOver();
+                return;
+            }
+        }
         onSurface = false;
         
+    }
+    public void setOnGround()
+    {
+        if(y > 0)
+        {
+            y = 0;
+            onSurface = true;
+        }
     }
     public void setOnBox(Box b, DoublePoint coll)
     {
@@ -57,7 +71,7 @@ public class Player
         {
             case 't':
             {
-                setY((coll.y + getY()) / 2);
+                setY((coll.y + y) / 2);
                 onSurface = true;
                 y = b.y - 1;
                 yVel = Math.min(b.yVel, yVel);
@@ -66,13 +80,13 @@ public class Player
             break;
             case 'b':
             {
-                setY((coll.y + getY()) / 2);
+                y = (coll.y + y) / 2;
                 yVel = b.yVel;
             }
             break;
             case 's':
             {
-                setX((coll.x + getX()) / 2);
+                x = (coll.x + x) / 2;
                 xVel = 0;
             }
             break;

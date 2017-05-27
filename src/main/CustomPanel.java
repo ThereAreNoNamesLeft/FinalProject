@@ -21,25 +21,25 @@ import main.Objects.Player;
 public class CustomPanel extends JPanel implements KeyListener, MouseMotionListener, MouseListener, MouseWheelListener
 {
     public static double level = 0;
-    Random RNG = new Random();
-    boolean tempJumpLimiter = true;
-    Keys keys = new Keys();
-    Player p = new Player();
-    ArrayList<Box> boxes = new ArrayList();
-    short milliseconds = 0, seconds = 0, minutes = 0, hours = 0;
+    public static Random RNG = new Random();
+    public static boolean tempJumpLimiter = true;
+    public static Keys keys = new Keys();
+    public static Player p = new Player();
+    public static ArrayList<Box> boxes = new ArrayList();
+    public static short milliseconds = 0, seconds = 0, minutes = 0, hours = 0;
     
     //notes
     //boxes array goes from bottom boxes to top boxes
-    public void startup()
+    public static void startup()
     {
         boxes.add(new Box(-1, 0, 802, 2));
         boxes.get(0).onSurface = true; 
         boxes.get(0).yVel = 0;
     }
     
-    public void run()
+    public static void run()
     {
-        level += 0.1;
+        level += 0.03;
         milliseconds += ComsciFinalProject.rate;
         if(milliseconds >= 1000)
         {
@@ -59,7 +59,7 @@ public class CustomPanel extends JPanel implements KeyListener, MouseMotionListe
                     }
                 }
             }
-            if(milliseconds % 50 < ComsciFinalProject.rate)
+            if(milliseconds % 40 < ComsciFinalProject.rate)
             {
                 addRandomBox();
             }
@@ -98,13 +98,12 @@ public class CustomPanel extends JPanel implements KeyListener, MouseMotionListe
             }
             //check for collisions between boxes and stop the higher box
             box.run();
-            broken
             if(!box.onSurface)
             {
                 for(int b2 = 0; b2 < boxes.size(); b2++)
                 {
                     Box box2 = boxes.get(b2);
-                    if(box2.onSurface && b2 != b1 && Collisions.Collides2d(box.x, box.y, box.x + box.width, box.y + box.height, box2.x, box2.y, box2.x + box2.width, box2.y + box2.height));
+                    if(box2.onSurface && Collisions.Collides2d(box.x, box.y, box.x + box.width, box.y + box.height, box2.x, box2.y, box2.x + box2.width, box2.y + box2.height))
                     {
                         box.setOnSurface();
                     }
@@ -127,7 +126,7 @@ public class CustomPanel extends JPanel implements KeyListener, MouseMotionListe
 //        }
     }
     
-    public void gameOver()
+    public static void gameOver()
     {
         milliseconds = 0;
         seconds = 0;
@@ -139,7 +138,7 @@ public class CustomPanel extends JPanel implements KeyListener, MouseMotionListe
         startup();
     }
     
-    public void addRandomBox()
+    public static void addRandomBox()
     {
         int width = RNG.nextInt(75) + 25;
         Box box = new Box(RNG.nextInt(800 - width), -(int)level - 600, width, RNG.nextInt(75) + 25);
@@ -156,7 +155,14 @@ public class CustomPanel extends JPanel implements KeyListener, MouseMotionListe
         //draw boxes
         for(Box box : boxes)
         {
-            g.drawRect((int)box.x, (int)box.y + (int)level + 400, (int)box.width, (int)box.height);
+            if(box.onSurface)
+            {
+                g.fillRect((int)box.x, (int)box.y + (int)level + 400, (int)box.width, (int)box.height);
+            }
+            else
+            {
+                g.drawRect((int)box.x, (int)box.y + (int)level + 400, (int)box.width, (int)box.height);
+            }
         }
         //draw player
         g.drawRect((int)p.getX() - 10, (int)p.getY() - 10 + (int)level + 400, 20, 20);
