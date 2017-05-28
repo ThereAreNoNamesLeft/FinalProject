@@ -46,13 +46,22 @@ public class Player
                 yVel = fallSpeed;
             }
         }
-        for(Box box : CustomPanel.boxes)
+        //check for crushing
+        if(onSurface)
         {
-            if(Collisions.Collides2dPoint(x, y, box.x, box.y, box.x + box.width, box.y + box.height))
+            for(Box box : CustomPanel.boxes)
             {
-                CustomPanel.gameOver();
-                return;
+                if(Collisions.Collides2dPoint(x, y, box.x, box.y, box.x + box.width, box.y + box.height))
+                {
+                    CustomPanel.gameOver();
+                    return;
+                }
             }
+        }
+        //check for falling
+        if(y - 200 > -CustomPanel.level)
+        {
+            CustomPanel.gameOver();
         }
         onSurface = false;
         
